@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SCANORY | Premium Ambiance Mixer</title>
+    <title>SCANORY | Baby Ambiance Mixer</title>
     
     <style>
         /* =========================================
@@ -38,7 +38,7 @@
             background-color: var(--scanory-bg);
             color: var(--scanory-text-main);
             font-family: 'Inter', system-ui, sans-serif;
-            height: 100dvh; /* Dinamička visina radi mobilnih traka */
+            height: 100dvh; /* Rešava problem sa dynamic toolbar preklapanjem na telefonima */
             width: 100vw;
             max-width: 100%;
             overflow: hidden; 
@@ -61,12 +61,12 @@
             z-index: 10;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Forsira sve direktne potomke u apsolutni centar */
+            align-items: center; /* Drži sve elemente strogo na sredini */
             justify-content: center;
             width: 100%;
             height: 100%;
             position: relative;
-            padding-bottom: env(safe-area-inset-bottom, 1.5rem); 
+            padding-bottom: env(safe-area-inset-bottom, 1.5rem); /* Sigurna zona od donje ivice telefona */
         }
 
         .spacer-top { flex: 1.2; } 
@@ -90,11 +90,11 @@
             letter-spacing: 0.6em;
             font-weight: 500;
             opacity: 0.4;
-            text-indent: 0.6em; /* Neutrališe pomeranje teksta ulevo zbog letter-spacing-a */
+            text-indent: 0.6em; /* Sprečava vizuelno pomeranje naslova ulevo */
         }
 
         /* =========================================
-           THE INVISIBLE SOUND EMITTER (Krug na sredini)
+           THE INVISIBLE SOUND EMITTER (Centralni Krug)
            ========================================= */
         .brand-center {
             flex: none;
@@ -104,7 +104,7 @@
             align-items: center;
             margin: 0 auto 2rem auto;
             position: relative;
-            overflow: hidden; /* Seče bilo kakve elemente/slike koji beže udesno */
+            overflow: hidden; /* Seče bilo kakvu sliku ili sjaj koji bi gurali interfejs u stranu */
         }
 
         .eclipse-node {
@@ -116,7 +116,6 @@
             justify-content: center;
         }
 
-        /* Rešavanje problema sa slikom/sjajem koji štrči desno */
         .brand-glow {
             position: absolute;
             width: 100%;
@@ -126,7 +125,7 @@
             border-radius: 50%;
             pointer-events: none;
             z-index: -1;
-            max-width: 100%; /* Ne dozvoljava da se proširi van roditelja */
+            max-width: 100%;
         }
 
         .eclipse-core {
@@ -164,7 +163,7 @@
         }
 
         /* =========================================
-           MIXER SOUNDBOARD INTERFACE
+           MIXER SOUNDBOARD INTERFACE (Kanali pesmica)
            ========================================= */
         .mixer-container {
             flex: none;
@@ -213,15 +212,15 @@
         }
 
         .channel-info {
-            width: 5rem;
+            width: 5.5rem; /* Malo prošireno zbog dužine naziva pesmica */
             flex: none;
         }
 
         .channel-name {
             font-family: 'Raleway', sans-serif;
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 600;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
             color: var(--scanory-text-sub);
             transition: var(--transition-smooth);
@@ -280,16 +279,9 @@
 
         input[type=range]::-webkit-slider-thumb:active { transform: scale(1.25); }
         input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: transparent; border: none; }
-        
-        input[type=range]::-moz-range-thumb {
-            height: 14px; width: 14px; border: 1px solid rgba(0,0,0,0.4); border-radius: 50%;
-            background: #3A3530; cursor: pointer; transition: all 0.2s ease;
-        }
-        .mixer-channel.active input[type=range]::-moz-range-thumb { background: var(--scanory-text-main); border-color: var(--scanory-primary); }
-        input[type=range]::-moz-range-track { width: 100%; height: 3px; background: transparent; border: none; }
 
         /* =========================================
-           LUXURY CONTROLS PANEL (MASTER + SHUFFLE)
+           LUXURY CONTROLS PANEL
            ========================================= */
         .controls-panel {
             flex: none;
@@ -388,7 +380,7 @@
         <div class="spacer-top"></div>
 
         <div class="vault-header">
-            <h2>Scanory</h2>
+            <h2>Scanory Baby</h2>
         </div>
 
         <div class="brand-center">
@@ -402,58 +394,58 @@
         </div>
 
         <div id="audioRack">
-            <audio id="audio-rain" loop preload="auto" src="./rain.mp3"></audio>
-            <audio id="audio-wind" loop preload="auto" src="./wind.mp3"></audio>
-            <audio id="audio-fire" loop preload="auto" src="./fire.mp3"></audio>
-            <audio id="audio-birds" loop preload="auto" src="./birds.mp3"></audio>
+            <audio id="audio-lullaby" loop preload="auto" src="./lullaby.mp3"></audio>
+            <audio id="audio-musicbox" loop preload="auto" src="./musicbox.mp3"></audio>
+            <audio id="audio-whitenoise" loop preload="auto" src="./whitenoise.mp3"></audio>
+            <audio id="audio-womb" loop preload="auto" src="./womb.mp3"></audio>
         </div>
 
         <div class="mixer-container">
-            <div class="mixer-channel" id="chan-rain">
-                <span class="channel-icon">🌧️</span>
+            <div class="mixer-channel" id="chan-lullaby">
+                <span class="channel-icon">🌙</span>
                 <div class="channel-info">
-                    <div class="channel-name">Rain</div>
+                    <div class="channel-name">Lullaby</div>
                 </div>
                 <div class="slider-wrapper">
                     <div class="track-bg"></div>
-                    <div class="progress-fill" id="fill-rain" style="width: 50%;"></div>
-                    <input type="range" id="slider-rain" min="0" max="1" step="0.01" value="0.5">
+                    <div class="progress-fill" id="fill-lullaby" style="width: 50%;"></div>
+                    <input type="range" id="slider-lullaby" min="0" max="1" step="0.01" value="0.5">
                 </div>
             </div>
 
-            <div class="mixer-channel" id="chan-wind">
-                <span class="channel-icon">💨</span>
+            <div class="mixer-channel" id="chan-musicbox">
+                <span class="channel-icon">🧸</span>
                 <div class="channel-info">
-                    <div class="channel-name">Wind</div>
+                    <div class="channel-name">Music Box</div>
                 </div>
                 <div class="slider-wrapper">
                     <div class="track-bg"></div>
-                    <div class="progress-fill" id="fill-wind" style="width: 0%;"></div>
-                    <input type="range" id="slider-wind" min="0" max="1" step="0.01" value="0">
+                    <div class="progress-fill" id="fill-musicbox" style="width: 0%;"></div>
+                    <input type="range" id="slider-musicbox" min="0" max="1" step="0.01" value="0">
                 </div>
             </div>
 
-            <div class="mixer-channel" id="chan-fire">
-                <span class="channel-icon">🪵</span>
+            <div class="mixer-channel" id="chan-whitenoise">
+                <span class="channel-icon">🤫</span>
                 <div class="channel-info">
-                    <div class="channel-name">Fireplace</div>
+                    <div class="channel-name">White Noise</div>
                 </div>
                 <div class="slider-wrapper">
                     <div class="track-bg"></div>
-                    <div class="progress-fill" id="fill-fire" style="width: 0%;"></div>
-                    <input type="range" id="slider-fire" min="0" max="1" step="0.01" value="0">
+                    <div class="progress-fill" id="fill-whitenoise" style="width: 0%;"></div>
+                    <input type="range" id="slider-whitenoise" min="0" max="1" step="0.01" value="0">
                 </div>
             </div>
 
-            <div class="mixer-channel" id="chan-birds">
-                <span class="channel-icon">🐦</span>
+            <div class="mixer-channel" id="chan-womb">
+                <span class="channel-icon">❤️</span>
                 <div class="channel-info">
-                    <div class="channel-name">Birds</div>
+                    <div class="channel-name">Womb Sound</div>
                 </div>
                 <div class="slider-wrapper">
                     <div class="track-bg"></div>
-                    <div class="progress-fill" id="fill-birds" style="width: 0%;"></div>
-                    <input type="range" id="slider-birds" min="0" max="1" step="0.01" value="0">
+                    <div class="progress-fill" id="fill-womb" style="width: 0%;"></div>
+                    <input type="range" id="slider-womb" min="0" max="1" step="0.01" value="0">
                 </div>
             </div>
         </div>
@@ -480,10 +472,10 @@
     <script>
         // --- MIXER ARCHITECTURE ENGINE ---
         const channels = [
-            { id: 'rain', audio: document.getElementById('audio-rain'), slider: document.getElementById('slider-rain'), fill: document.getElementById('fill-rain'), container: document.getElementById('chan-rain') },
-            { id: 'wind', audio: document.getElementById('audio-wind'), slider: document.getElementById('slider-wind'), fill: document.getElementById('fill-wind'), container: document.getElementById('chan-wind') },
-            { id: 'fire', audio: document.getElementById('audio-fire'), slider: document.getElementById('slider-fire'), fill: document.getElementById('fill-fire'), container: document.getElementById('chan-fire') },
-            { id: 'birds', audio: document.getElementById('audio-birds'), slider: document.getElementById('slider-birds'), fill: document.getElementById('fill-birds'), container: document.getElementById('chan-birds') }
+            { id: 'lullaby', audio: document.getElementById('audio-lullaby'), slider: document.getElementById('slider-lullaby'), fill: document.getElementById('fill-lullaby'), container: document.getElementById('chan-lullaby') },
+            { id: 'musicbox', audio: document.getElementById('audio-musicbox'), slider: document.getElementById('slider-musicbox'), fill: document.getElementById('fill-musicbox'), container: document.getElementById('chan-musicbox') },
+            { id: 'whitenoise', audio: document.getElementById('audio-whitenoise'), slider: document.getElementById('slider-whitenoise'), fill: document.getElementById('fill-whitenoise'), container: document.getElementById('chan-whitenoise') },
+            { id: 'womb', audio: document.getElementById('audio-womb'), slider: document.getElementById('slider-womb'), fill: document.getElementById('fill-womb'), container: document.getElementById('chan-womb') }
         ];
 
         const masterPlayBtn = document.getElementById('masterPlayBtn');
