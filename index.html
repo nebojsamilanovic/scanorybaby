@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SCANORY | Premium Audio Vault</title>
+    <title>SCANORY | Lullababies Premium Vault</title>
     
     <style>
         /* =========================================
@@ -104,7 +104,6 @@
         }
 
         .carousel-slide {
-            /* Flipped to standard fixed sizing for absolute circle enforcement on mobile */
             flex: 0 0 280px; 
             display: flex;
             justify-content: center;
@@ -117,11 +116,8 @@
             overflow: visible; 
         }
 
-        /* Scaled elegantly for desktop displays via media queries */
         @media (min-width: 768px) {
-            .carousel-slide {
-                flex: 0 0 360px;
-            }
+            .carousel-slide { flex: 0 0 360px; }
         }
 
         .carousel-slide.active {
@@ -134,15 +130,12 @@
             position: relative;
             width: 220px;
             height: 220px;
-            flex: none; /* STOPS FLEXBOX FROM SQUEEZING THE CIRCLE INTO AN ELLIPSE */
+            flex: none; 
             overflow: visible;
         }
 
         @media (min-width: 768px) {
-            .cover-wrapper-node {
-                width: 280px;
-                height: 280px;
-            }
+            .cover-wrapper-node { width: 280px; height: 280px; }
         }
 
         .cover-container {
@@ -152,11 +145,11 @@
             overflow: visible; 
         }
 
-        /* AUDIO-REACTIVE RHYTHM RING (Perfect Circle Mirror) */
+        /* AUDIO-REACTIVE RHYTHM RING */
         .rhythm-ring {
             position: absolute;
             inset: 0; 
-            border-radius: 50% !important; /* Absolute circle lock */
+            border-radius: 50% !important; 
             background: var(--scanory-primary);
             opacity: var(--rhythm-opacity, 0);
             transform: scale(var(--rhythm-scale, 1));
@@ -167,14 +160,13 @@
             will-change: transform, opacity, filter;
         }
 
-        /* Safe CSS Fallback Animation */
         .rhythm-ring.safe-pulse {
             animation: visual-pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes visual-pulse {
             0% { transform: scale(1); opacity: 0.15; filter: blur(8px); }
-            50% { transform: scale(1.18); opacity: 0.5; filter: blur(20px); }
+            50% { transform: scale(1.15); opacity: 0.4; filter: blur(16px); }
             100% { transform: scale(1); opacity: 0.15; filter: blur(8px); }
         }
 
@@ -184,7 +176,7 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
             padding: 0.5rem;
-            border-radius: 50% !important; /* Absolute circle lock */
+            border-radius: 50% !important; 
             width: 100%;
             height: 100%;
             display: flex;
@@ -200,8 +192,8 @@
         .cover-image {
             width: 100%;
             height: 100%;
-            object-fit: cover !important; /* Stops the browser from stretching the source image */
-            border-radius: 50% !important; /* Absolute circle lock */
+            object-fit: cover !important; 
+            border-radius: 50% !important; 
             opacity: 0.9;
         }
 
@@ -488,11 +480,40 @@
     </main>
 
     <script>
-        // --- DATA ARCHITECTURE ---
+        // --- SCANORY LULLABABIES COLLECTION ---
+        // Integrated stable cloud assets for flawless testing.
         const playlist = [
-            { id: 0, title: "Sleeping Star", artist: "Your Personal Lullaby", src: "MoonCradle.mp3", cover: "BabyImage.jpeg" },
-            { id: 1, title: "Cotton Dreams", artist: "Ambient Nightscape", src: "MoonCradle.mp3", cover: "BabyImage.jpeg" },
-            { id: 2, title: "Moon Valley", artist: "Classical Piano", src: "MoonCradle.mp3", cover: "BabyImage.jpeg" }
+            { 
+                id: 0, 
+                title: "Velvet Starlight", 
+                artist: "Lullababies Vol. I", 
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", 
+                cover: "BabyImage.jpeg" 
+            },
+            { 
+                // Concept: Music box theme focusing on deep theta-waves for infant REM sleep induction
+                id: 1, 
+                title: "Golden Sleepwalkers", 
+                artist: "Lullababies Vol. II", 
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", 
+                cover: "BabyImage.jpeg" 
+            },
+            { 
+                // Concept: Pure ambient physical warmth frequency, replicating the mother's rhythmic heartbeat
+                id: 2, 
+                title: "Silk Clouds", 
+                artist: "Lullababies Vol. III", 
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", 
+                cover: "BabyImage.jpeg" 
+            },
+            { 
+                // Concept: Orchestral grand piano, slow cadence, specifically crafted for nighttime crib transition
+                id: 3, 
+                title: "The Infinite Cradle", 
+                artist: "Lullababies Vol. IV", 
+                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", 
+                cover: "BabyImage.jpeg" 
+            }
         ];
 
         // --- DOM ELEMENTS ---
@@ -546,7 +567,7 @@
                 isAudioInitialized = true;
                 drawRhythm();
             } catch (error) {
-                console.warn("SCANORY Safe Mode: Local context fallback active.");
+                console.warn("SCANORY Safe Mode: Switched to CSS fallback pulse loop.");
                 isVisualizerBroken = true;
                 activateFallbackPulse();
             }
@@ -564,9 +585,9 @@
             for (let i = 0; i < 15; i++) sum += dataArray[i];
             let avg = sum / 15;
             
-            let scale = 1.0 + (avg / 255) * 0.15;
-            let opacity = (avg / 255) * 0.7;
-            let blur = 8 + (avg / 255) * 16;
+            let scale = 1.0 + (avg / 255) * 0.12; // Master calibrated bound scale
+            let opacity = (avg / 255) * 0.6;
+            let blur = 8 + (avg / 255) * 14;
 
             const activeRing = document.querySelector('.carousel-slide.active .rhythm-ring');
             if (activeRing) {
