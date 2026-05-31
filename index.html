@@ -85,12 +85,12 @@
         }
 
         /* =========================================
-           EDGE-TO-EDGE CAROUSEL (Anti-Clipping Architecture)
+           EDGE-TO-EDGE CAROUSEL (Geometric Lock)
            ========================================= */
         .carousel-viewport {
             flex: none;
             width: 100vw; 
-            overflow: visible; /* CRITICAL: Allows glow to expand beyond viewport limitations without cutting */
+            overflow: visible; 
             position: relative;
             margin-bottom: 1.5rem;
             touch-action: pan-y; 
@@ -104,15 +104,24 @@
         }
 
         .carousel-slide {
-            flex: 0 0 clamp(240px, 60vw, 360px); 
+            /* Flipped to standard fixed sizing for absolute circle enforcement on mobile */
+            flex: 0 0 280px; 
             display: flex;
             justify-content: center;
+            align-items: center;
             position: relative;
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 0.15;
             transform: scale(0.8);
             filter: blur(4px);
-            overflow: visible; /* CRITICAL: Prevents any container-level clipping */
+            overflow: visible; 
+        }
+
+        /* Scaled elegantly for desktop displays via media queries */
+        @media (min-width: 768px) {
+            .carousel-slide {
+                flex: 0 0 360px;
+            }
         }
 
         .carousel-slide.active {
@@ -121,20 +130,33 @@
             filter: blur(0);
         }
 
+        .cover-wrapper-node {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            flex: none; /* STOPS FLEXBOX FROM SQUEEZING THE CIRCLE INTO AN ELLIPSE */
+            overflow: visible;
+        }
+
+        @media (min-width: 768px) {
+            .cover-wrapper-node {
+                width: 280px;
+                height: 280px;
+            }
+        }
+
         .cover-container {
             position: relative;
             width: 100%;
-            aspect-ratio: 1 / 1;
-            padding: 24px; /* Premium Safety Padding: allocates guaranteed space for the wave expansion */
+            height: 100%;
             overflow: visible; 
         }
 
-        /* AUDIO-REACTIVE RHYTHM RING (Perfect Circle Expansion) */
+        /* AUDIO-REACTIVE RHYTHM RING (Perfect Circle Mirror) */
         .rhythm-ring {
             position: absolute;
-            /* Anchored deep behind the image, safely within our padding zone */
-            inset: 24px; 
-            border-radius: 50%;
+            inset: 0; 
+            border-radius: 50% !important; /* Absolute circle lock */
             background: var(--scanory-primary);
             opacity: var(--rhythm-opacity, 0);
             transform: scale(var(--rhythm-scale, 1));
@@ -162,7 +184,7 @@
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--glass-border);
             padding: 0.5rem;
-            border-radius: 50%;
+            border-radius: 50% !important; /* Absolute circle lock */
             width: 100%;
             height: 100%;
             display: flex;
@@ -178,8 +200,8 @@
         .cover-image {
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
+            object-fit: cover !important; /* Stops the browser from stretching the source image */
+            border-radius: 50% !important; /* Absolute circle lock */
             opacity: 0.9;
         }
 
@@ -542,7 +564,6 @@
             for (let i = 0; i < 15; i++) sum += dataArray[i];
             let avg = sum / 15;
             
-            // Controlled bounds: Min scale 1 (no shrinking), Max scale 1.15 (safely inside padding)
             let scale = 1.0 + (avg / 255) * 0.15;
             let opacity = (avg / 255) * 0.7;
             let blur = 8 + (avg / 255) * 16;
@@ -579,10 +600,12 @@
                 slide.id = `slide-${index}`;
                 
                 slide.innerHTML = `
-                    <div class="cover-container">
-                        <div class="rhythm-ring"></div>
-                        <div class="glass-panel">
-                            <img src="${track.cover}" alt="Cover" class="cover-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxRTFBMTciLz48L3N2Zz4='">
+                    <div class="cover-wrapper-node">
+                        <div class="cover-container">
+                            <div class="rhythm-ring"></div>
+                            <div class="glass-panel">
+                                <img src="${track.cover}" alt="Cover" class="cover-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxRTFBMTciLz48L3N2Zz4='">
+                            </div>
                         </div>
                     </div>
                 `;
