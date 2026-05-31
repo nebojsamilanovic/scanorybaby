@@ -480,38 +480,42 @@
     </main>
 
     <script>
-        // --- SCANORY LULLABABIES COLLECTION ---
-        // Integrated stable cloud assets for flawless testing.
+        // --- SCANORY LULLABABIES REAL REPOSITORY DECK ---
+        // Linked directly to your real repository files with relative root logic
         const playlist = [
             { 
                 id: 0, 
-                title: "Velvet Starlight", 
-                artist: "Lullababies Vol. I", 
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", 
+                title: "Moon Cradle", 
+                artist: "Lullababies Premium", 
+                src: "./MoonCradle.mp3", 
                 cover: "BabyImage.jpeg" 
             },
             { 
-                // Concept: Music box theme focusing on deep theta-waves for infant REM sleep induction
                 id: 1, 
-                title: "Golden Sleepwalkers", 
-                artist: "Lullababies Vol. II", 
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3", 
+                title: "Summer Rain", 
+                artist: "Ambiance Track", 
+                src: "./rain.mp3", 
                 cover: "BabyImage.jpeg" 
             },
             { 
-                // Concept: Pure ambient physical warmth frequency, replicating the mother's rhythmic heartbeat
                 id: 2, 
-                title: "Silk Clouds", 
-                artist: "Lullababies Vol. III", 
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3", 
+                title: "Cozy Hearth", 
+                artist: "Ambiance Track", 
+                src: "./fire.mp3", 
                 cover: "BabyImage.jpeg" 
             },
             { 
-                // Concept: Orchestral grand piano, slow cadence, specifically crafted for nighttime crib transition
                 id: 3, 
-                title: "The Infinite Cradle", 
-                artist: "Lullababies Vol. IV", 
-                src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3", 
+                title: "Night Wind", 
+                artist: "Ambiance Track", 
+                src: "./wind.mp3", 
+                cover: "BabyImage.jpeg" 
+            },
+            { 
+                id: 4, 
+                title: "Forest Birds", 
+                artist: "Ambiance Track", 
+                src: "./birds.mp3", 
                 cover: "BabyImage.jpeg" 
             }
         ];
@@ -585,7 +589,7 @@
             for (let i = 0; i < 15; i++) sum += dataArray[i];
             let avg = sum / 15;
             
-            let scale = 1.0 + (avg / 255) * 0.12; // Master calibrated bound scale
+            let scale = 1.0 + (avg / 255) * 0.12; 
             let opacity = (avg / 255) * 0.6;
             let blur = 8 + (avg / 255) * 14;
 
@@ -595,18 +599,6 @@
                 activeRing.style.setProperty('--rhythm-scale', scale);
                 activeRing.style.setProperty('--rhythm-opacity', opacity);
                 activeRing.style.setProperty('--rhythm-blur', blur + 'px');
-            }
-        }
-
-        function activateFallbackPulse() {
-            const activeRing = document.querySelector('.carousel-slide.active .rhythm-ring');
-            if (activeRing && isPlaying) {
-                activeRing.style.removeProperty('--rhythm-scale');
-                activeRing.style.removeProperty('--rhythm-opacity');
-                activeRing.style.removeProperty('--rhythm-blur');
-                activeRing.classList.add('safe-pulse');
-            } else if (activeRing) {
-                activeRing.classList.remove('safe-pulse');
             }
         }
 
@@ -655,7 +647,6 @@
                 if(idx !== currentTrackIndex) {
                     const ring = s.querySelector('.rhythm-ring');
                     if(ring) {
-                        ring.classList.remove('safe-pulse');
                         ring.style.setProperty('--rhythm-scale', 1);
                         ring.style.setProperty('--rhythm-opacity', 0);
                     }
@@ -664,8 +655,6 @@
             document.querySelectorAll('.dot').forEach((dot, idx) => {
                 dot.classList.toggle('active', idx === currentTrackIndex);
             });
-
-            if (isVisualizerBroken) activateFallbackPulse();
         }
 
         // --- PLAYER MECHANICS ---
@@ -699,8 +688,6 @@
                 audio.pause();
             } else {
                 audio.play().catch(err => {
-                    isVisualizerBroken = true;
-                    activateFallbackPulse();
                     audio.play();
                 });
             }
@@ -712,12 +699,10 @@
                 playIcon.classList.add('hidden');
                 pauseIcon.classList.remove('hidden');
                 vaultBody.classList.add('is-playing');
-                if (isVisualizerBroken) activateFallbackPulse();
             } else {
                 playIcon.classList.remove('hidden');
                 pauseIcon.classList.add('hidden');
                 vaultBody.classList.remove('is-playing');
-                if (isVisualizerBroken) activateFallbackPulse();
             }
         }
 
