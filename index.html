@@ -836,7 +836,7 @@
                 this.y += this.speedY; this.x += this.speedX;
                 if (this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
             }
-            draw() { ctx.fillStyle = `rgba(198, 138, 71, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+            draw() { ctx.fillStyle = `rgba(240, 209, 164, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
         }
         for (let i = 0; i < 60; i++) particles.push(new Particle());
         function animateStardust() {
