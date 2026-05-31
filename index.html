@@ -207,10 +207,9 @@
             position: relative;
             display: flex;
             align-items: center;
-            height: 16px; /* Clickable space without cutting the thumb */
+            height: 16px;
         }
 
-        /* Base Grey Track */
         .track-bg {
             position: absolute;
             left: 0;
@@ -223,7 +222,6 @@
             z-index: 1;
         }
 
-        /* Golden Fill Track */
         .progress-fill {
             position: absolute;
             left: 0;
@@ -233,11 +231,10 @@
             background: var(--scanory-primary);
             border-radius: 1px;
             z-index: 2;
-            pointer-events: none; /* Must not block clicks */
+            pointer-events: none;
             box-shadow: 0 0 8px rgba(198, 138, 71, 0.5);
         }
 
-        /* Invisible Native Input (Thumb Control) */
         input[type=range] {
             -webkit-appearance: none;
             width: 100%;
@@ -248,7 +245,6 @@
             outline: none;
         }
 
-        /* WebKit Browsers (iOS, Safari, Chrome) */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             height: 12px;
@@ -258,7 +254,7 @@
             cursor: pointer;
             box-shadow: 0 0 10px rgba(198, 138, 71, 0.8);
             transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            margin-top: -5px; /* Center thumb over 2px track */
+            margin-top: -5px;
         }
 
         input[type=range]::-webkit-slider-thumb:active {
@@ -272,7 +268,6 @@
             border: none;
         }
 
-        /* Firefox Support */
         input[type=range]::-moz-range-thumb {
             height: 12px;
             width: 12px;
@@ -334,6 +329,7 @@
             box-shadow: 0 0 20px rgba(198, 138, 71, 0.1);
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
 
         .btn-play::before {
@@ -352,6 +348,18 @@
         }
 
         .btn-play:hover::before { opacity: 1; }
+
+        /* Autoplay Blocked Animation */
+        @keyframes subtle-pulse {
+            0% { box-shadow: 0 0 10px rgba(198, 138, 71, 0.2); transform: scale(1); }
+            50% { box-shadow: 0 0 40px rgba(198, 138, 71, 0.6); transform: scale(1.05); }
+            100% { box-shadow: 0 0 10px rgba(198, 138, 71, 0.2); transform: scale(1); }
+        }
+
+        .btn-play.needs-interaction {
+            animation: subtle-pulse 2.5s infinite ease-in-out;
+            border-color: var(--scanory-primary);
+        }
 
         /* =========================================
            PLAYLIST & COLLECTION AREA
@@ -532,7 +540,7 @@
             <p id="trackArtist" class="track-artist">SCANORY</p>
         </div>
 
-        <audio id="audioPlayer"></audio>
+        <audio id="audioPlayer" preload="auto"></audio>
 
         <div class="progress-container">
             <span id="currentTime" class="time-display right">0:00</span>
@@ -661,6 +669,8 @@
         }
 
         function togglePlayPause() {
+            // Remove the attention pulse if the user interacted
+            playBtn.classList.remove('needs-interaction');
             isPlaying ? audio.pause() : audio.play();
         }
 
@@ -690,13 +700,23 @@
                 currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
             }
             loadTrack(currentTrackIndex);
-            if (isPlaying) audio.play();
+            
+            // Interaction removes the pulse class
+            playBtn.classList.remove('needs-interaction');
+            
+            // Force play on track change
+            audio.play();
         }
 
         function playPrev() {
             currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
             loadTrack(currentTrackIndex);
-            if (isPlaying) audio.play();
+            
+            // Interaction removes the pulse class
+            playBtn.classList.remove('needs-interaction');
+            
+            // Force play on track change
+            audio.play();
         }
 
         function toggleShuffle() {
@@ -735,6 +755,7 @@
                 li.onclick = () => {
                     currentTrackIndex = index;
                     loadTrack(currentTrackIndex);
+                    playBtn.classList.remove('needs-interaction');
                     audio.play();
                 };
 
@@ -847,8 +868,23 @@
         }
         animateStardust();
 
-        // --- INITIALIZATION ---
+        // --- INITIALIZATION & AUTOPLAY STRATEGY ---
         loadTrack(currentTrackIndex);
+
+        // Attempt Elite Autoplay Promise
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                // Autoplay was allowed by the device
+                updatePlayState(true);
+            }).catch(error => {
+                // Autoplay was blocked (Standard iOS/Android behavior)
+                // Trigger the subtle invitation pulse on the play button
+                console.log("SCANORY Vault: Awaiting user interaction to unlock audio.");
+                playBtn.classList.add('needs-interaction');
+            });
+        }
     </script>
 </body>
 </html>
