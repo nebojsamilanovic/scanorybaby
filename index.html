@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
@@ -7,7 +7,7 @@
     
     <style>
         /* =========================================
-           SCANORY | BRAND COLOR LAWS & VARIABLES
+           SCANORY | BRENDIRANE BOJE I VARIJABLE
            ========================================= */
         :root {
             --scanory-bg: #12100E;
@@ -24,7 +24,7 @@
         @font-face { font-family: 'Inter'; src: local('Inter'), sans-serif; }
 
         /* =========================================
-           RESET & CORE FULLSCREEN ARCHITECTURE
+           RESETOVANJE I STRUKTURA PREKO CIJELOG EKRANA
            ========================================= */
         * {
             margin: 0;
@@ -37,13 +37,14 @@
             background-color: var(--scanory-bg);
             color: var(--scanory-text-main);
             font-family: 'Inter', system-ui, sans-serif;
-            height: 100dvh; /* Korišćenje dynamic vh radi mobilnih traka */
+            height: 100vh;
+            height: 100dvh; /* Prilagođeno za mobilne pretraživače */
             width: 100vw;
             max-width: 100%;
             overflow: hidden; 
             display: flex;
             flex-direction: column;
-            align-items: center; /* POPRAVKA: Forsira elemente u centar ekrana */
+            align-items: center;
             justify-content: center;
             overscroll-behavior: none; 
         }
@@ -59,18 +60,19 @@
             z-index: 10;
             display: flex;
             flex-direction: column;
-            align-items: center; /* POPRAVKA: Forsira sve kontejnere u centar */
+            align-items: center;
             justify-content: center;
             width: 100%;
             height: 100%;
             position: relative;
+            padding-bottom: env(safe-area-inset-bottom, 1.5rem);
         }
 
         .spacer-top { flex: 1.2; } 
         .spacer-bottom { flex: 0.8; min-height: 2rem; }
 
         /* =========================================
-           HEADER
+           ZAGLAVLJE
            ========================================= */
         .vault-header {
             flex: none;
@@ -86,22 +88,22 @@
             font-size: 0.65rem;
             text-transform: uppercase;
             letter-spacing: 0.4em;
-            text-indent: 0.4em; /* Kompenzacija za letter-spacing da tekst bude u milimetarskom centru */
+            text-indent: 0.4em;
         }
 
         /* =========================================
-           CAROUSEL ARCHITECTURE (Klipovanje i centriranje)
+           KARUSEL (Savršeno centrirana geometrija)
            ========================================= */
         .carousel-viewport {
             flex: none;
             width: 100%; 
             max-width: 100vw;
-            overflow: hidden; /* KLJUČNA POPRAVKA: Seče slike koje izlaze desno i sprečava guranje ulevo */
+            overflow: hidden; /* Reže elemente koji idu van ekrana */
             position: relative;
             margin-bottom: 1.5rem;
             touch-action: pan-y; 
             display: flex;
-            justify-content: center; /* Osigurava stabilnu centralnu tačku */
+            align-items: center;
         }
 
         .carousel-track {
@@ -109,9 +111,11 @@
             align-items: center;
             transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             will-change: transform;
+            width: max-content; /* Sprečava prelamanje staze */
         }
 
         .carousel-slide {
+            width: 280px; /* Fiksna širina za mobilne uređaje */
             flex: 0 0 280px; 
             display: flex;
             justify-content: center;
@@ -119,17 +123,17 @@
             position: relative;
             transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 0.15;
-            transform: scale(0.75); /* Smanjeno da manje-bitne slike sa strane ne dominiraju */
+            transform: scale(0.75); /* Neaktivne slike su manje */
             filter: blur(4px);
         }
 
         @media (min-width: 768px) {
-            .carousel-slide { flex: 0 0 360px; }
+            .carousel-slide { width: 360px; flex: 0 0 360px; }
         }
 
         .carousel-slide.active {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1); /* Aktivna slika je u punoj veličini */
             filter: blur(0);
         }
 
@@ -138,6 +142,7 @@
             width: 220px;
             height: 220px;
             flex: none; 
+            overflow: visible;
         }
 
         @media (min-width: 768px) {
@@ -148,9 +153,10 @@
             position: relative;
             width: 100%;
             height: 100%;
+            overflow: visible; 
         }
 
-        /* AUDIO-REACTIVE RHYTHM RING */
+        /* REAKTIVNI SVJETLOSNI PRSTEN */
         .rhythm-ring {
             position: absolute;
             inset: 0; 
@@ -207,7 +213,7 @@
         }
 
         /* =========================================
-           UI CONTROLS CONTAINER
+           KONTROLNI PANEL KORISNIKA (UI)
            ========================================= */
         .ui-container {
             flex: none;
@@ -279,7 +285,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Progress Bar */
+        /* Vremenska linija (Progress) */
         .progress-container {
             width: 100%;
             display: flex;
@@ -345,7 +351,7 @@
         }
         input[type=range]::-moz-range-track { width: 100%; height: 2px; background: transparent; border: none; }
 
-        /* Buttons */
+        /* Tipke / Dugmad */
         .controls-container {
             width: 100%;
             display: flex;
@@ -364,7 +370,6 @@
         .btn-secondary { width: 2.5rem; height: 2.5rem; }
         .btn-secondary:hover { color: var(--scanory-text-main); }
         
-        /* State colors */
         .btn-secondary.active { color: var(--scanory-primary) !important; }
 
         .btn-play {
@@ -416,6 +421,7 @@
             <h2>Scanory Vault</h2>
         </div>
 
+        <!-- Glavna vrteška s bebom -->
         <div class="carousel-viewport">
             <div class="carousel-track" id="carouselTrack"></div>
         </div>
@@ -424,7 +430,7 @@
             <div class="pagination" id="pagination"></div>
 
             <div class="track-meta">
-                <h1 id="trackTitle" class="track-title">Loading...</h1>
+                <h1 id="trackTitle" class="track-title">Učitavanje...</h1>
                 <p id="trackArtist" class="track-artist">SCANORY</p>
             </div>
 
@@ -441,7 +447,8 @@
             </div>
 
             <div class="controls-container">
-                <button id="loopCollectionBtn" class="btn-secondary active">
+                <!-- 1. Tipka: Ponavljanje cijele kolekcije (Zadano: Aktivno) -->
+                <button id="loopCollectionBtn" class="btn-secondary active" title="Ponavljanje kolekcije">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
                         <path d="M17 2l4 4-4 4"/>
                         <path d="M3 11v-1a4 4 0 0 1 4-4h14"/>
@@ -450,14 +457,16 @@
                     </svg>
                 </button>
 
-                <button id="prevBtn" class="btn-secondary" style="color: var(--scanory-text-main);">
+                <!-- 2. Tipka: Prethodna pjesmica -->
+                <button id="prevBtn" class="btn-secondary" style="color: var(--scanory-text-main);" title="Prethodna">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;">
                         <polygon points="19 20 9 12 19 4 19 20"/>
                         <line x1="5" y1="19" x2="5" y2="5"/>
                     </svg>
                 </button>
 
-                <button id="playBtn" class="btn-play">
+                <!-- 3. Tipka: Reprodukcija / Pauza -->
+                <button id="playBtn" class="btn-play" title="Pokreni / Zaustavi">
                     <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" style="width: 26px; height: 26px; margin-left: 4px;">
                         <polygon points="6 3 20 12 6 21 6 3"/>
                     </svg>
@@ -467,14 +476,16 @@
                     </svg>
                 </button>
 
-                <button id="nextBtn" class="btn-secondary" style="color: var(--scanory-text-main);">
+                <!-- 4. Tipka: Sljedeća pjesmica -->
+                <button id="nextBtn" class="btn-secondary" style="color: var(--scanory-text-main);" title="Sljedeća">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;">
                         <polygon points="5 4 15 12 5 20 5 4"/>
                         <line x1="19" y1="5" x2="19" y2="19"/>
                     </svg>
                 </button>
 
-                <button id="shuffleBtn" class="btn-secondary">
+                <!-- 5. Tipka: Nasumično (Shuffle) -->
+                <button id="shuffleBtn" class="btn-secondary" title="Nasumično">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
                         <polyline points="16 3 21 3 21 8"/>
                         <line x1="4" y1="20" x2="21" y2="3"/>
@@ -490,7 +501,8 @@
     </main>
 
     <script>
-        // --- SCANORY LULLABABIES - DECK ---
+        // --- SCANORY LULLABABIES KOLEKCIJA ---
+        // Svi slajdovi u potpunosti vrte Vašu glavnu uspavanku "MoonCradle.mp3"
         const playlist = [
             { id: 0, title: "Moon Cradle — Vol. I", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
             { id: 1, title: "Moon Cradle — Vol. II", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
@@ -499,7 +511,7 @@
             { id: 4, title: "Moon Cradle — Vol. V", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" }
         ];
 
-        // --- DOM ELEMENTS ---
+        // --- DOM ELEMENTI ---
         const audio = document.getElementById('audioPlayer');
         const playBtn = document.getElementById('playBtn');
         const prevBtn = document.getElementById('prevBtn');
@@ -519,7 +531,7 @@
         const pagination = document.getElementById('pagination');
         const vaultBody = document.getElementById('vaultBody');
 
-        // --- STATE SETTINGS ---
+        // --- STANJA APLIKACIJE ---
         let currentTrackIndex = 0;
         let isPlaying = false;
         let isCollectionLoopActive = true; 
@@ -529,7 +541,7 @@
         let isAudioInitialized = false;
         let isVisualizerBroken = false;
 
-        // --- WEB AUDIO API ---
+        // --- WEB AUDIO API (Ritam i pulsiranje) ---
         function initAudioVisualizer() {
             if (isAudioInitialized || isVisualizerBroken) return;
             try {
@@ -582,7 +594,7 @@
             }
         }
 
-        // --- CAROUSEL ---
+        // --- GENERISANJE SLIKOVNOG KARUSELA ---
         function initCarousel() {
             carouselTrack.innerHTML = '';
             pagination.innerHTML = '';
@@ -608,14 +620,18 @@
             });
         }
 
+        // --- MATEMATIČKI CENTRIRANO POMJERANJE STLAZE (CAROUSEL) ---
         function updateCarouselView() {
-            const slide = document.getElementById(`slide-${currentTrackIndex}`);
-            if (!slide) return;
-            const slideWidth = slide.offsetWidth;
+            // Fiksni parametri širine iz CSS-a kako bismo izbegli timing greške pretraživača
+            const isDesktop = window.innerWidth >= 768;
+            const slideWidth = isDesktop ? 360 : 280;
+            
             const viewportWidth = window.innerWidth;
             const centerOffset = (viewportWidth / 2) - (slideWidth / 2);
             const translatePx = -(currentTrackIndex * slideWidth) + centerOffset;
+            
             carouselTrack.style.transform = `translateX(${translatePx}px)`;
+
             document.querySelectorAll('.carousel-slide').forEach((s, idx) => {
                 s.classList.toggle('active', idx === currentTrackIndex);
                 if(idx !== currentTrackIndex) {
@@ -631,7 +647,7 @@
             });
         }
 
-        // --- PLAYER CONTROLS ---
+        // --- UPRAVLJANJE PLAYEROM ---
         function formatTime(seconds) {
             if (isNaN(seconds)) return "0:00";
             const min = Math.floor(seconds / 60);
@@ -720,7 +736,7 @@
             reloadAndExecuteTrack();
         }
 
-        // --- SWIPE LOGIC ---
+        // --- DETEKCIJA SWIPE GESTA ---
         let isDragging = false;
         let startPos = 0;
 
@@ -733,9 +749,8 @@
         carouselTrack.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             const diff = e.touches[0].clientX - startPos;
-            const slide = document.getElementById(`slide-${currentTrackIndex}`);
-            if(!slide) return;
-            const slideWidth = slide.offsetWidth;
+            const isDesktop = window.innerWidth >= 768;
+            const slideWidth = isDesktop ? 360 : 280;
             const centerOffset = (window.innerWidth / 2) - (slideWidth / 2);
             const baseTranslatePx = -(currentTrackIndex * slideWidth) + centerOffset;
             carouselTrack.style.transform = `translateX(${baseTranslatePx + diff}px)`;
@@ -757,7 +772,7 @@
 
         window.addEventListener('resize', updateCarouselView);
 
-        // --- INTERACTION EVENT LISTENERS ---
+        // --- SLUŠAČI DOGAĐAJA ---
         playBtn.addEventListener('click', togglePlayPause);
         nextBtn.addEventListener('click', playNext);
         prevBtn.addEventListener('click', playPrev);
@@ -796,7 +811,7 @@
             progressFill.style.width = `${e.target.value}%`;
         });
 
-        // --- BACKGROUND STARDUST ---
+        // --- POZADINA S PRAŠINOM (STARDUST) ---
         const canvas = document.getElementById('stardust');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -827,7 +842,7 @@
         }
         animateStardust();
 
-        // --- INITIALIZATION ---
+        // --- INICIJALIZACIJA ---
         initCarousel();
         loadTrack(currentTrackIndex);
     </script>
