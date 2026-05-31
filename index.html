@@ -1,30 +1,31 @@
 <!DOCTYPE html>
-<html lang="hr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>SCANORY | Lullababies Premium Vault</title>
+    <title>SCANORY | Premium Ambiance Mixer</title>
     
     <style>
         /* =========================================
-           SCANORY | BRENDIRANE BOJE I VARIJABLE
+           SCANORY | BRAND COLOR LAWS & VARIABLES
            ========================================= */
         :root {
-            --scanory-bg: #12100E;
-            --scanory-section: #1E1A17;
+            --scanory-bg: #0C0A09;
+            --scanory-section: #141210;
             --scanory-primary: #C68A47;
+            --scanory-primary-glow: rgba(198, 138, 71, 0.15);
             --scanory-secondary: #A0682B;
             --scanory-text-main: #F4F0EA;
-            --scanory-text-sub: #D3CFC9;
-            --glass-bg: rgba(30, 26, 23, 0.5);
-            --glass-border: rgba(198, 138, 71, 0.15);
+            --scanory-text-sub: #78726C;
+            --glass-bg: rgba(20, 18, 16, 0.5);
+            --transition-smooth: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         @font-face { font-family: 'Raleway'; src: local('Raleway'), sans-serif; }
         @font-face { font-family: 'Inter'; src: local('Inter'), sans-serif; }
 
         /* =========================================
-           RESETOVANJE I STRUKTURA PREKO CIJELOG EKRANA
+           RESET & CORE FULLSCREEN ARCHITECTURE
            ========================================= */
         * {
             margin: 0;
@@ -37,8 +38,7 @@
             background-color: var(--scanory-bg);
             color: var(--scanory-text-main);
             font-family: 'Inter', system-ui, sans-serif;
-            height: 100vh;
-            height: 100dvh; /* Prilagođeno za mobilne pretraživače */
+            height: 100dvh; 
             width: 100vw;
             max-width: 100%;
             overflow: hidden; 
@@ -52,33 +52,34 @@
         canvas#stardust {
             position: absolute;
             inset: 0;
-            z-index: 0;
+            z-index: 1;
             pointer-events: none;
+            opacity: 0.5;
         }
 
         main {
             z-index: 10;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            align-items: center; 
             justify-content: center;
-            width: 100%;
+            width: 100vw;
+            max-width: 100%; 
             height: 100%;
             position: relative;
-            padding-bottom: env(safe-area-inset-bottom, 1.5rem);
+            padding-bottom: env(safe-area-inset-bottom, 1.5rem); 
         }
 
         .spacer-top { flex: 1.2; } 
-        .spacer-bottom { flex: 0.8; min-height: 2rem; }
+        .spacer-bottom { flex: 0.8; } 
 
         /* =========================================
-           ZAGLAVLJE
+           HEADER
            ========================================= */
         .vault-header {
             flex: none;
             text-align: center;
-            margin-bottom: 2rem;
-            opacity: 0.8;
+            margin-bottom: 1.5rem;
             width: 100%;
         }
 
@@ -87,249 +88,176 @@
             color: var(--scanory-primary);
             font-size: 0.65rem;
             text-transform: uppercase;
-            letter-spacing: 0.4em;
-            text-indent: 0.4em;
+            letter-spacing: 0.6em;
+            font-weight: 500;
+            opacity: 0.4;
+            text-indent: 0.6em; 
         }
 
         /* =========================================
-           KARUSEL (Savršeno centrirana geometrija)
+           THE INVISIBLE SOUND EMITTER (Fixed Rendering Bug)
            ========================================= */
-        .carousel-viewport {
+        .brand-center {
             flex: none;
-            width: 100%; 
-            max-width: 100vw;
-            overflow: hidden; /* Reže elemente koji idu van ekrana */
-            position: relative;
-            margin-bottom: 1.5rem;
-            touch-action: pan-y; 
-            display: flex;
-            align-items: center;
-        }
-
-        .carousel-track {
-            display: flex;
-            align-items: center;
-            transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            will-change: transform;
-            width: max-content; /* Sprečava prelamanje staze */
-        }
-
-        .carousel-slide {
-            width: 280px; /* Fiksna širina za mobilne uređaje */
-            flex: 0 0 280px; 
+            width: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin: 0 auto 2rem auto;
             position: relative;
-            transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-            opacity: 0.15;
-            transform: scale(0.75); /* Neaktivne slike su manje */
-            filter: blur(4px);
         }
 
-        @media (min-width: 768px) {
-            .carousel-slide { width: 360px; flex: 0 0 360px; }
-        }
-
-        .carousel-slide.active {
-            opacity: 1;
-            transform: scale(1); /* Aktivna slika je u punoj veličini */
-            filter: blur(0);
-        }
-
-        .cover-wrapper-node {
+        .eclipse-node {
             position: relative;
-            width: 220px;
-            height: 220px;
-            flex: none; 
-            overflow: visible;
+            width: 250px; /* Široka bezbjedna zona koja sprečava sječenje prstenova */
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        @media (min-width: 768px) {
-            .cover-wrapper-node { width: 280px; height: 280px; }
-        }
-
-        .cover-container {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            overflow: visible; 
-        }
-
-        /* REAKTIVNI SVJETLOSNI PRSTEN */
-        .rhythm-ring {
+        .brand-glow {
             position: absolute;
-            inset: 0; 
-            border-radius: 50% !important; 
-            background: var(--scanory-primary);
-            opacity: var(--rhythm-opacity, 0);
-            transform: scale(var(--rhythm-scale, 1));
-            filter: blur(var(--rhythm-blur, 12px));
-            z-index: 1;
+            width: 90px;
+            height: 90px;
+            background: transparent;
+            border-radius: 50%;
             pointer-events: none;
-            transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.08s ease-out, filter 0.08s ease-out;
-            will-change: transform, opacity, filter;
+            z-index: -1;
+            box-shadow: 0 0 45px 15px var(--scanory-primary-glow); /* Rješava blur bug */
         }
 
-        .rhythm-ring.safe-pulse {
-            animation: visual-pulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @keyframes visual-pulse {
-            0% { transform: scale(1); opacity: 0.15; filter: blur(8px); }
-            50% { transform: scale(1.15); opacity: 0.4; filter: blur(16px); }
-            100% { transform: scale(1); opacity: 0.15; filter: blur(8px); }
-        }
-
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--glass-border);
-            padding: 0.5rem;
-            border-radius: 50% !important; 
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
+        .eclipse-core {
             position: relative;
+            width: 90px;
+            height: 90px;
+            background: var(--scanory-bg); 
+            border-radius: 50%;
             z-index: 10;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            pointer-events: none; 
         }
 
-        .cover-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover !important; 
-            border-radius: 50% !important; 
-            opacity: 0.9;
+        .eclipse-wave {
+            position: absolute;
+            width: 90px; /* Kreće od tačne širine centra */
+            height: 90px;
+            left: 50%;
+            top: 50%;
+            margin-left: -45px;
+            margin-top: -45px;
+            border: 1px solid rgba(198, 138, 71, 0.2);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transform: scale(0.8);
         }
 
-        .is-playing .carousel-slide.active .cover-image {
-            animation: spin-slow 25s linear infinite;
+        .is-playing .w1 { animation: luxury-ripple 4.5s infinite ease-out; will-change: transform, opacity; }
+        .is-playing .w2 { animation: luxury-ripple 4.5s infinite ease-out; animation-delay: 1.5s; will-change: transform, opacity; }
+        .is-playing .w3 { animation: luxury-ripple 4.5s infinite ease-out; animation-delay: 3s; will-change: transform, opacity; }
+
+        @keyframes luxury-ripple {
+            0% { transform: scale(0.8); opacity: 0; border-width: 2px; }
+            20% { opacity: 0.4; }
+            100% { transform: scale(2.4); opacity: 0; border-width: 0px; }
         }
 
         /* =========================================
-           KONTROLNI PANEL KORISNIKA (UI)
+           MIXER SOUNDBOARD INTERFACE
            ========================================= */
-        .ui-container {
+        .mixer-container {
             flex: none;
             width: 100%;
-            max-width: 450px;
+            max-width: 420px;
             margin: 0 auto;
             padding: 0 1.5rem;
             display: flex;
             flex-direction: column;
-            align-items: center;
+            gap: 0.75rem;
         }
 
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-bottom: 2rem;
-            width: 100%;
-        }
-
-        .dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--scanory-text-sub);
-            opacity: 0.3;
-            transition: all 0.3s ease;
-        }
-
-        .dot.active {
-            background: var(--scanory-primary);
-            opacity: 1;
-            transform: scale(1.4);
-            box-shadow: 0 0 5px var(--scanory-primary);
-        }
-
-        .track-meta {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .track-title {
-            font-family: 'Raleway', sans-serif;
-            font-size: 1.4rem;
-            letter-spacing: 0.1em;
-            margin-bottom: 0.25rem;
-            text-align: center;
-            font-weight: 600;
-            width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .track-artist {
-            color: var(--scanory-text-sub);
-            font-size: 0.7rem;
-            font-weight: 300;
-            text-align: center;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            opacity: 0.8;
-            width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        /* Vremenska linija (Progress) */
-        .progress-container {
-            width: 100%;
+        .mixer-channel {
+            background: rgba(20, 18, 16, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.01);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 18px;
+            padding: 0.85rem 1.2rem; 
             display: flex;
             align-items: center;
             gap: 1rem;
-            margin-bottom: 2rem;
+            transition: var(--transition-smooth);
         }
 
-        .time-display {
-            font-size: 0.65rem;
-            color: var(--scanory-text-sub);
-            font-family: monospace;
-            opacity: 0.7;
-            width: 2.5rem;
+        .mixer-channel.active {
+            border-color: rgba(198, 138, 71, 0.1);
+            background: rgba(22, 19, 17, 0.85);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+
+        .channel-icon {
+            font-size: 1.25rem;
+            width: 1.8rem;
+            text-align: center;
+            opacity: 0.25;
+            filter: grayscale(100%);
+            transition: var(--transition-smooth);
             flex: none;
         }
 
-        .time-display.right { text-align: right; }
-        .time-display.left { text-align: left; }
+        .mixer-channel.active .channel-icon {
+            opacity: 0.85;
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .channel-info {
+            width: 5rem;
+            flex: none;
+        }
+
+        .channel-name {
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--scanory-text-sub);
+            transition: var(--transition-smooth);
+        }
+
+        .mixer-channel.active .channel-name {
+            color: var(--scanory-primary);
+        }
 
         .slider-wrapper {
             flex-grow: 1;
             position: relative;
             display: flex;
             align-items: center;
-            height: 16px;
+            height: 20px;
         }
 
         .track-bg {
             position: absolute;
             left: 0; right: 0; top: 50%;
             transform: translateY(-50%);
-            height: 2px; background: rgba(211, 207, 201, 0.2);
-            border-radius: 1px; z-index: 1;
+            height: 3px; background: rgba(255, 255, 255, 0.03);
+            border-radius: 3px; z-index: 1;
         }
 
         .progress-fill {
             position: absolute;
             left: 0; top: 50%;
             transform: translateY(-50%);
-            height: 2px; background: var(--scanory-primary);
-            border-radius: 1px; z-index: 2;
+            height: 3px; background: rgba(255,255,255,0.15);
+            border-radius: 3px; z-index: 2;
             pointer-events: none;
-            box-shadow: 0 0 8px rgba(198, 138, 71, 0.5);
+            transition: background 0.4s ease, width 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .mixer-channel.active .progress-fill {
+            background: linear-gradient(90deg, var(--scanory-secondary), var(--scanory-primary));
         }
 
         input[type=range] {
@@ -339,72 +267,113 @@
 
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none; height: 14px; width: 14px; border-radius: 50%;
-            background: var(--scanory-primary); cursor: pointer;
-            box-shadow: 0 0 10px rgba(198, 138, 71, 0.8); margin-top: -6px;
+            background: #3A3530; cursor: pointer; border: 1px solid rgba(0,0,0,0.4);
+            transition: all 0.2s ease; margin-top: -5px;
         }
 
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 2px; background: transparent; border: none; }
+        .mixer-channel.active input[type=range]::-webkit-slider-thumb {
+            background: var(--scanory-text-main);
+            border-color: var(--scanory-primary);
+            box-shadow: 0 0 8px rgba(198, 138, 71, 0.4);
+        }
+
+        input[type=range]::-webkit-slider-thumb:active { transform: scale(1.25); }
+        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 3px; background: transparent; border: none; }
+        
         input[type=range]::-moz-range-thumb {
-            height: 14px; width: 14px; border: none; border-radius: 50%;
-            background: var(--scanory-primary); cursor: pointer;
-            box-shadow: 0 0 10px rgba(198, 138, 71, 0.8);
+            height: 14px; width: 14px; border: 1px solid rgba(0,0,0,0.4); border-radius: 50%;
+            background: #3A3530; cursor: pointer; transition: all 0.2s ease;
         }
-        input[type=range]::-moz-range-track { width: 100%; height: 2px; background: transparent; border: none; }
+        .mixer-channel.active input[type=range]::-moz-range-thumb { background: var(--scanory-text-main); border-color: var(--scanory-primary); }
+        input[type=range]::-moz-range-track { width: 100%; height: 3px; background: transparent; border: none; }
 
-        /* Tipke / Dugmad */
-        .controls-container {
-            width: 100%;
+        /* =========================================
+           LUXURY CONTROLS PANEL (MASTER + SHUFFLE)
+           ========================================= */
+        .controls-panel {
+            flex: none;
+            width: calc(100% - 3rem);
+            max-width: 356px;
+            margin: 1.5rem auto 0 auto;
+            background: rgba(20, 18, 16, 0.5);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            padding: 0.5rem;
+            border-radius: 32px;
             display: flex;
             align-items: center;
-            justify-content: space-evenly;
+            gap: 0.5rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            z-index: 20;
         }
 
-        button {
-            background: none; border: none; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            transition: all 0.3s ease; color: var(--scanory-text-sub);
-            padding: 0.5rem;
+        .btn-master-play {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--scanory-text-main);
+            border: 1px solid rgba(255,255,255,0.04);
+            font-family: 'Raleway', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 1rem 1.8rem;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            flex-grow: 1;
+            text-indent: 0.2em;
         }
 
-        button:focus { outline: none; }
-        .btn-secondary { width: 2.5rem; height: 2.5rem; }
-        .btn-secondary:hover { color: var(--scanory-text-main); }
-        
-        .btn-secondary.active { color: var(--scanory-primary) !important; }
-
-        .btn-play {
-            width: 4.5rem; height: 4.5rem; border-radius: 50%;
-            background: var(--scanory-section); color: var(--scanory-primary);
-            border: 1px solid rgba(198, 138, 71, 0.3);
-            box-shadow: 0 0 20px rgba(198, 138, 71, 0.1);
-            position: relative; overflow: hidden; flex: none;
+        .btn-master-play:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(198, 138, 71, 0.2);
         }
 
-        .btn-play::before {
-            content: ''; position: absolute; inset: 0;
-            background: radial-gradient(circle, rgba(198,138,71,0.15) 0%, transparent 70%);
-            opacity: 0; transition: opacity 0.3s ease;
+        .btn-master-play.active {
+            background: linear-gradient(135deg, var(--scanory-secondary), var(--scanory-primary));
+            color: #12100E;
+            border-color: transparent;
+            box-shadow: 0 10px 25px rgba(198, 138, 71, 0.25);
+            font-weight: 700;
         }
 
-        .btn-play:hover {
-            transform: scale(1.05); border-color: var(--scanory-primary);
-            box-shadow: 0 0 30px rgba(198, 138, 71, 0.3);
+        .btn-shuffle {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--scanory-text-sub);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            width: 3.2rem;
+            height: 3.2rem;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
-        @keyframes subtle-pulse {
-            0% { box-shadow: 0 0 10px rgba(198, 138, 71, 0.2); transform: scale(1); }
-            50% { box-shadow: 0 0 40px rgba(198, 138, 71, 0.6); transform: scale(1.05); }
-            100% { box-shadow: 0 0 10px rgba(198, 138, 71, 0.2); transform: scale(1); }
+        .btn-shuffle:hover {
+            background: rgba(198, 138, 71, 0.08);
+            border-color: rgba(198, 138, 71, 0.25);
+            color: var(--scanory-primary);
         }
 
-        .btn-play.needs-interaction {
-            animation: subtle-pulse 2.5s infinite ease-in-out;
-            border-color: var(--scanory-primary);
+        .btn-shuffle svg {
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .btn-shuffle:hover svg {
+            transform: rotate(180deg);
+        }
+
+        .btn-shuffle:active {
+            transform: scale(0.92);
         }
 
         .hidden { display: none !important; }
@@ -418,404 +387,222 @@
         <div class="spacer-top"></div>
 
         <div class="vault-header">
-            <h2>Scanory Vault</h2>
+            <h2>Scanory</h2>
         </div>
 
-        <!-- Glavna vrteška s bebom -->
-        <div class="carousel-viewport">
-            <div class="carousel-track" id="carouselTrack"></div>
-        </div>
-
-        <div class="ui-container">
-            <div class="pagination" id="pagination"></div>
-
-            <div class="track-meta">
-                <h1 id="trackTitle" class="track-title">Učitavanje...</h1>
-                <p id="trackArtist" class="track-artist">SCANORY</p>
+        <div class="brand-center">
+            <div class="eclipse-node">
+                <div class="brand-glow"></div>
+                <div class="eclipse-wave w1"></div>
+                <div class="eclipse-wave w2"></div>
+                <div class="eclipse-wave w3"></div>
+                <div class="eclipse-core"></div>
             </div>
+        </div>
 
-            <audio id="audioPlayer" preload="auto"></audio>
+        <div id="audioRack">
+            <audio id="audio-rain" loop preload="auto" src="./rain.mp3"></audio>
+            <audio id="audio-wind" loop preload="auto" src="./wind.mp3"></audio>
+            <audio id="audio-fire" loop preload="auto" src="./fire.mp3"></audio>
+            <audio id="audio-birds" loop preload="auto" src="./birds.mp3"></audio>
+        </div>
 
-            <div class="progress-container">
-                <span id="currentTime" class="time-display right">0:00</span>
+        <div class="mixer-container">
+            <div class="mixer-channel" id="chan-rain">
+                <span class="channel-icon">🌧️</span>
+                <div class="channel-info">
+                    <div class="channel-name">Rain</div>
+                </div>
                 <div class="slider-wrapper">
                     <div class="track-bg"></div>
-                    <div id="progressFill" class="progress-fill" style="width: 0%;"></div>
-                    <input type="range" id="progressBar" min="0" max="100" value="0">
+                    <div class="progress-fill" id="fill-rain" style="width: 50%;"></div>
+                    <input type="range" id="slider-rain" min="0" max="1" step="0.01" value="0.5">
                 </div>
-                <span id="durationTime" class="time-display left">0:00</span>
             </div>
 
-            <div class="controls-container">
-                <!-- 1. Tipka: Ponavljanje cijele kolekcije (Zadano: Aktivno) -->
-                <button id="loopCollectionBtn" class="btn-secondary active" title="Ponavljanje kolekcije">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-                        <path d="M17 2l4 4-4 4"/>
-                        <path d="M3 11v-1a4 4 0 0 1 4-4h14"/>
-                        <path d="M7 22l-4-4 4-4"/>
-                        <path d="M21 13v1a4 4 0 0 1-4 4H3"/>
-                    </svg>
-                </button>
-
-                <!-- 2. Tipka: Prethodna pjesmica -->
-                <button id="prevBtn" class="btn-secondary" style="color: var(--scanory-text-main);" title="Prethodna">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;">
-                        <polygon points="19 20 9 12 19 4 19 20"/>
-                        <line x1="5" y1="19" x2="5" y2="5"/>
-                    </svg>
-                </button>
-
-                <!-- 3. Tipka: Reprodukcija / Pauza -->
-                <button id="playBtn" class="btn-play" title="Pokreni / Zaustavi">
-                    <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" style="width: 26px; height: 26px; margin-left: 4px;">
-                        <polygon points="6 3 20 12 6 21 6 3"/>
-                    </svg>
-                    <svg id="pauseIcon" class="hidden" viewBox="0 0 24 24" fill="currentColor" style="width: 26px; height: 26px;">
-                        <rect x="6" y="4" width="4" height="16"/>
-                        <rect x="14" y="4" width="4" height="16"/>
-                    </svg>
-                </button>
-
-                <!-- 4. Tipka: Sljedeća pjesmica -->
-                <button id="nextBtn" class="btn-secondary" style="color: var(--scanory-text-main);" title="Sljedeća">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 28px; height: 28px;">
-                        <polygon points="5 4 15 12 5 20 5 4"/>
-                        <line x1="19" y1="5" x2="19" y2="19"/>
-                    </svg>
-                </button>
-
-                <!-- 5. Tipka: Nasumično (Shuffle) -->
-                <button id="shuffleBtn" class="btn-secondary" title="Nasumično">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-                        <polyline points="16 3 21 3 21 8"/>
-                        <line x1="4" y1="20" x2="21" y2="3"/>
-                        <polyline points="21 16 21 21 16 21"/>
-                        <line x1="15" y1="15" x2="21" y2="21"/>
-                        <line x1="4" y1="4" x2="9" y2="9"/>
-                    </svg>
-                </button>
+            <div class="mixer-channel" id="chan-wind">
+                <span class="channel-icon">💨</span>
+                <div class="channel-info">
+                    <div class="channel-name">Wind</div>
+                </div>
+                <div class="slider-wrapper">
+                    <div class="track-bg"></div>
+                    <div class="progress-fill" id="fill-wind" style="width: 0%;"></div>
+                    <input type="range" id="slider-wind" min="0" max="1" step="0.01" value="0">
+                </div>
             </div>
+
+            <div class="mixer-channel" id="chan-fire">
+                <span class="channel-icon">🪵</span>
+                <div class="channel-info">
+                    <div class="channel-name">Fireplace</div>
+                </div>
+                <div class="slider-wrapper">
+                    <div class="track-bg"></div>
+                    <div class="progress-fill" id="fill-fire" style="width: 0%;"></div>
+                    <input type="range" id="slider-fire" min="0" max="1" step="0.01" value="0">
+                </div>
+            </div>
+
+            <div class="mixer-channel" id="chan-birds">
+                <span class="channel-icon">🐦</span>
+                <div class="channel-info">
+                    <div class="channel-name">Birds</div>
+                </div>
+                <div class="slider-wrapper">
+                    <div class="track-bg"></div>
+                    <div class="progress-fill" id="fill-birds" style="width: 0%;"></div>
+                    <input type="range" id="slider-birds" min="0" max="1" step="0.01" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <button id="masterPlayBtn" class="btn-master-play">
+                <span id="masterPlayText">Activate Vault</span>
+            </button>
+            
+            <button id="shuffleBtn" class="btn-shuffle" title="Infinite Smart Shuffle">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="16 3 21 3 21 8"></polyline>
+                    <line x1="4" y1="20" x2="21" y2="3"></line>
+                    <polyline points="21 16 21 21 16 21"></polyline>
+                    <line x1="15" y1="15" x2="21" y2="21"></line>
+                    <line x1="4" y1="4" x2="9" y2="9"></line>
+                </svg>
+            </button>
         </div>
 
         <div class="spacer-bottom"></div>
     </main>
 
     <script>
-        // --- SCANORY LULLABABIES KOLEKCIJA ---
-        // Svi slajdovi u potpunosti vrte Vašu glavnu uspavanku "MoonCradle.mp3"
-        const playlist = [
-            { id: 0, title: "Moon Cradle — Vol. I", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
-            { id: 1, title: "Moon Cradle — Vol. II", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
-            { id: 2, title: "Moon Cradle — Vol. III", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
-            { id: 3, title: "Moon Cradle — Vol. IV", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
-            { id: 4, title: "Moon Cradle — Vol. V", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" }
+        // --- MIXER ARCHITECTURE ENGINE ---
+        const channels = [
+            { id: 'rain', audio: document.getElementById('audio-rain'), slider: document.getElementById('slider-rain'), fill: document.getElementById('fill-rain'), container: document.getElementById('chan-rain') },
+            { id: 'wind', audio: document.getElementById('audio-wind'), slider: document.getElementById('slider-wind'), fill: document.getElementById('fill-wind'), container: document.getElementById('chan-wind') },
+            { id: 'fire', audio: document.getElementById('audio-fire'), slider: document.getElementById('slider-fire'), fill: document.getElementById('fill-fire'), container: document.getElementById('chan-fire') },
+            { id: 'birds', audio: document.getElementById('audio-birds'), slider: document.getElementById('slider-birds'), fill: document.getElementById('fill-birds'), container: document.getElementById('chan-birds') }
         ];
 
-        // --- DOM ELEMENTI ---
-        const audio = document.getElementById('audioPlayer');
-        const playBtn = document.getElementById('playBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const loopCollectionBtn = document.getElementById('loopCollectionBtn');
+        const masterPlayBtn = document.getElementById('masterPlayBtn');
         const shuffleBtn = document.getElementById('shuffleBtn');
-        
-        const playIcon = document.getElementById('playIcon');
-        const pauseIcon = document.getElementById('pauseIcon');
-        const progressBar = document.getElementById('progressBar');
-        const progressFill = document.getElementById('progressFill');
-        const currentTimeEl = document.getElementById('currentTime');
-        const durationTimeEl = document.getElementById('durationTime');
-        const trackTitle = document.getElementById('trackTitle');
-        const trackArtist = document.getElementById('trackArtist');
-        const carouselTrack = document.getElementById('carouselTrack');
-        const pagination = document.getElementById('pagination');
+        const masterPlayText = document.getElementById('masterPlayText');
         const vaultBody = document.getElementById('vaultBody');
-
-        // --- STANJA APLIKACIJE ---
-        let currentTrackIndex = 0;
-        let isPlaying = false;
-        let isCollectionLoopActive = true; 
-        let isShuffleActive = false;        
         
-        let audioCtx, analyser, source, dataArray;
-        let isAudioInitialized = false;
-        let isVisualizerBroken = false;
+        let isMasterPlaying = false;
 
-        // --- WEB AUDIO API (Ritam i pulsiranje) ---
-        function initAudioVisualizer() {
-            if (isAudioInitialized || isVisualizerBroken) return;
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContext();
-                analyser = audioCtx.createAnalyser();
-                source = audioCtx.createMediaElementSource(audio);
-                source.connect(analyser);
-                analyser.connect(audioCtx.destination);
-                analyser.fftSize = 256;
-                const bufferLength = analyser.frequencyBinCount;
-                dataArray = new Uint8Array(bufferLength);
-                isAudioInitialized = true;
-                drawRhythm();
-            } catch (error) {
-                isVisualizerBroken = true;
-                activateFallbackPulse();
-            }
-        }
+        channels.forEach(chan => {
+            chan.audio.volume = chan.slider.value;
+            chan.fill.style.width = `${chan.slider.value * 100}%`;
+            updateChannelState(chan);
 
-        function drawRhythm() {
-            if (!isAudioInitialized || isVisualizerBroken) return;
-            requestAnimationFrame(drawRhythm);
-            if (!isPlaying) return;
-            analyser.getByteFrequencyData(dataArray);
-            let sum = 0;
-            for (let i = 0; i < 15; i++) sum += dataArray[i];
-            let avg = sum / 15;
-            let scale = 1.0 + (avg / 255) * 0.12; 
-            let opacity = (avg / 255) * 0.6;
-            let blur = 8 + (avg / 255) * 14;
-            const activeRing = document.querySelector('.carousel-slide.active .rhythm-ring');
-            if (activeRing) {
-                activeRing.classList.remove('safe-pulse'); 
-                activeRing.style.setProperty('--rhythm-scale', scale);
-                activeRing.style.setProperty('--rhythm-opacity', opacity);
-                activeRing.style.setProperty('--rhythm-blur', blur + 'px');
-            }
-        }
-
-        function activateFallbackPulse() {
-            const activeRing = document.querySelector('.carousel-slide.active .rhythm-ring');
-            if (activeRing && isPlaying) {
-                activeRing.style.removeProperty('--rhythm-scale');
-                activeRing.style.removeProperty('--rhythm-opacity');
-                activeRing.style.removeProperty('--rhythm-blur');
-                activeRing.classList.add('safe-pulse');
-            } else if (activeRing) {
-                activeRing.classList.remove('safe-pulse');
-            }
-        }
-
-        // --- GENERISANJE SLIKOVNOG KARUSELA ---
-        function initCarousel() {
-            carouselTrack.innerHTML = '';
-            pagination.innerHTML = '';
-            playlist.forEach((track, index) => {
-                const slide = document.createElement('div');
-                slide.className = 'carousel-slide';
-                slide.id = `slide-${index}`;
-                slide.innerHTML = `
-                    <div class="cover-wrapper-node">
-                        <div class="cover-container">
-                            <div class="rhythm-ring"></div>
-                            <div class="glass-panel">
-                                <img src="${track.cover}" alt="Cover" class="cover-image" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9IiMxRTFBMTciLz48L3N2Zz4='">
-                            </div>
-                        </div>
-                    </div>
-                `;
-                carouselTrack.appendChild(slide);
-                const dot = document.createElement('div');
-                dot.className = 'dot';
-                dot.id = `dot-${index}`;
-                pagination.appendChild(dot);
-            });
-        }
-
-        // --- MATEMATIČKI CENTRIRANO POMJERANJE STLAZE (CAROUSEL) ---
-        function updateCarouselView() {
-            // Fiksni parametri širine iz CSS-a kako bismo izbegli timing greške pretraživača
-            const isDesktop = window.innerWidth >= 768;
-            const slideWidth = isDesktop ? 360 : 280;
-            
-            const viewportWidth = window.innerWidth;
-            const centerOffset = (viewportWidth / 2) - (slideWidth / 2);
-            const translatePx = -(currentTrackIndex * slideWidth) + centerOffset;
-            
-            carouselTrack.style.transform = `translateX(${translatePx}px)`;
-
-            document.querySelectorAll('.carousel-slide').forEach((s, idx) => {
-                s.classList.toggle('active', idx === currentTrackIndex);
-                if(idx !== currentTrackIndex) {
-                    const ring = s.querySelector('.rhythm-ring');
-                    if(ring) {
-                        ring.style.setProperty('--rhythm-scale', 1);
-                        ring.style.setProperty('--rhythm-opacity', 0);
+            chan.audio.addEventListener('timeupdate', () => {
+                if (chan.audio.currentTime > chan.audio.duration - 0.3) {
+                    chan.audio.currentTime = 0;
+                    if (isMasterPlaying && chan.audio.volume > 0) {
+                        chan.audio.play().catch(() => {});
                     }
                 }
             });
-            document.querySelectorAll('.dot').forEach((dot, idx) => {
-                dot.classList.toggle('active', idx === currentTrackIndex);
+
+            chan.slider.addEventListener('input', (e) => {
+                const val = e.target.value;
+                chan.audio.volume = val;
+                chan.fill.style.width = `${val * 100}%`;
+                
+                updateChannelState(chan);
+
+                if (!isMasterPlaying && val > 0) {
+                    toggleMasterPlayback();
+                } else if (isMasterPlaying && val > 0) {
+                    chan.audio.play().catch(() => {});
+                }
             });
-        }
+        });
 
-        // --- UPRAVLJANJE PLAYEROM ---
-        function formatTime(seconds) {
-            if (isNaN(seconds)) return "0:00";
-            const min = Math.floor(seconds / 60);
-            const sec = Math.floor(seconds % 60);
-            return `${min}:${sec < 10 ? '0' : ''}${sec}`;
-        }
-
-        function loadTrack(index) {
-            const track = playlist[index];
-            audio.src = track.src;
-            trackTitle.textContent = track.title;
-            trackArtist.textContent = track.artist;
-            audio.volume = 1.0; 
-            updateCarouselView();
-        }
-
-        function reloadAndExecuteTrack() {
-            if (!isAudioInitialized && !isVisualizerBroken) initAudioVisualizer();
-            audio.currentTime = 0; 
-            audio.play().then(() => {
-                updatePlayState(true);
-            }).catch(() => {
-                updatePlayState(true);
-            });
-        }
-
-        function togglePlayPause() {
-            playBtn.classList.remove('needs-interaction');
-            if (!isAudioInitialized && !isVisualizerBroken) initAudioVisualizer();
-            if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            isPlaying ? audio.pause() : audio.play();
-        }
-
-        function updatePlayState(playing) {
-            isPlaying = playing;
-            if (isPlaying) {
-                playIcon.classList.add('hidden');
-                pauseIcon.classList.remove('hidden');
-                vaultBody.classList.add('is-playing');
+        function updateChannelState(chan) {
+            if (chan.audio.volume > 0) {
+                chan.container.classList.add('active');
             } else {
-                playIcon.classList.remove('hidden');
-                pauseIcon.classList.add('hidden');
-                vaultBody.classList.remove('is-playing');
+                chan.container.classList.remove('active');
             }
         }
 
-        function playNext() {
-            if (isShuffleActive) {
-                let randomIndex;
-                do {
-                    randomIndex = Math.floor(Math.random() * playlist.length);
-                } while (randomIndex === currentTrackIndex && playlist.length > 1);
-                currentTrackIndex = randomIndex;
-            } else {
-                if (currentTrackIndex === playlist.length - 1) {
-                    if (isCollectionLoopActive) {
-                        currentTrackIndex = 0; 
+        function triggerInfiniteShuffle() {
+            const focusIndex = Math.floor(Math.random() * channels.length);
+            
+            channels.forEach((chan, index) => {
+                let targetVolume;
+                
+                if (index === focusIndex) {
+                    targetVolume = (Math.random() * 0.30 + 0.60).toFixed(2);
+                } else {
+                    if (Math.random() < 0.25) {
+                        targetVolume = 0;
                     } else {
-                        audio.pause();
-                        updatePlayState(false);
-                        return;
+                        targetVolume = (Math.random() * 0.40).toFixed(2);
                     }
-                } else {
-                    currentTrackIndex++;
                 }
+                
+                chan.audio.volume = targetVolume;
+                chan.slider.value = targetVolume;
+                chan.fill.style.width = `${targetVolume * 100}%`;
+                
+                updateChannelState(chan);
+
+                if (isMasterPlaying) {
+                    if (targetVolume > 0) {
+                        chan.audio.play().catch(() => {});
+                    } else {
+                        chan.audio.pause();
+                    }
+                }
+            });
+
+            if (!isMasterPlaying) {
+                toggleMasterPlayback();
             }
-            loadTrack(currentTrackIndex);
-            reloadAndExecuteTrack();
         }
 
-        function playPrev() {
-            if (isShuffleActive) {
-                let randomIndex;
-                do {
-                    randomIndex = Math.floor(Math.random() * playlist.length);
-                } while (randomIndex === currentTrackIndex && playlist.length > 1);
-                currentTrackIndex = randomIndex;
+        function toggleMasterPlayback() {
+            isMasterPlaying = !isMasterPlaying;
+
+            if (isMasterPlaying) {
+                masterPlayBtn.classList.add('active');
+                vaultBody.classList.add('is-playing');
+                masterPlayText.textContent = "Mute Vault";
+
+                channels.forEach(chan => {
+                    if (chan.audio.volume > 0) {
+                        chan.audio.play().catch(err => {
+                            console.log("SCANORY Engine active.");
+                        });
+                    }
+                });
             } else {
-                if (currentTrackIndex === 0) {
-                    currentTrackIndex = playlist.length - 1;
-                } else {
-                    currentTrackIndex--;
-                }
+                masterPlayBtn.classList.remove('active');
+                vaultBody.classList.remove('is-playing');
+                masterPlayText.textContent = "Activate Vault";
+
+                channels.forEach(chan => {
+                    chan.audio.pause();
+                });
             }
-            loadTrack(currentTrackIndex);
-            reloadAndExecuteTrack();
         }
 
-        // --- DETEKCIJA SWIPE GESTA ---
-        let isDragging = false;
-        let startPos = 0;
+        masterPlayBtn.addEventListener('click', toggleMasterPlayback);
+        shuffleBtn.addEventListener('click', triggerInfiniteShuffle);
 
-        carouselTrack.addEventListener('touchstart', (e) => {
-            isDragging = true;
-            startPos = e.touches[0].clientX;
-            carouselTrack.style.transition = 'none'; 
-        });
-
-        carouselTrack.addEventListener('touchmove', (e) => {
-            if (!isDragging) return;
-            const diff = e.touches[0].clientX - startPos;
-            const isDesktop = window.innerWidth >= 768;
-            const slideWidth = isDesktop ? 360 : 280;
-            const centerOffset = (window.innerWidth / 2) - (slideWidth / 2);
-            const baseTranslatePx = -(currentTrackIndex * slideWidth) + centerOffset;
-            carouselTrack.style.transform = `translateX(${baseTranslatePx + diff}px)`;
-        });
-
-        carouselTrack.addEventListener('touchend', (e) => {
-            isDragging = false;
-            carouselTrack.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
-            const diff = e.changedTouches[0].clientX - startPos;
-            const threshold = 50; 
-            if (diff < -threshold) {
-                playNext(); 
-            } else if (diff > threshold) {
-                playPrev(); 
-            } else {
-                updateCarouselView(); 
-            }
-        });
-
-        window.addEventListener('resize', updateCarouselView);
-
-        // --- SLUŠAČI DOGAĐAJA ---
-        playBtn.addEventListener('click', togglePlayPause);
-        nextBtn.addEventListener('click', playNext);
-        prevBtn.addEventListener('click', playPrev);
-        
-        loopCollectionBtn.addEventListener('click', () => {
-            isCollectionLoopActive = !isCollectionLoopActive;
-            loopCollectionBtn.classList.toggle('active', isCollectionLoopActive);
-        });
-
-        shuffleBtn.addEventListener('click', () => {
-            isShuffleActive = !isShuffleActive;
-            shuffleBtn.classList.toggle('active', isShuffleActive);
-        });
-
-        audio.addEventListener('play', () => updatePlayState(true));
-        audio.addEventListener('pause', () => updatePlayState(false));
-
-        audio.addEventListener('timeupdate', () => {
-            if (audio.duration) {
-                const progressPercent = (audio.currentTime / audio.duration) * 100;
-                progressBar.value = progressPercent;
-                progressFill.style.width = `${progressPercent}%`;
-                currentTimeEl.textContent = formatTime(audio.currentTime);
-            }
-        });
-
-        audio.addEventListener('ended', () => {
-            playNext();
-        });
-
-        audio.addEventListener('loadedmetadata', () => { durationTimeEl.textContent = formatTime(audio.duration); });
-        
-        progressBar.addEventListener('input', (e) => {
-            const seekTime = (e.target.value / 100) * audio.duration;
-            audio.currentTime = seekTime;
-            progressFill.style.width = `${e.target.value}%`;
-        });
-
-        // --- POZADINA S PRAŠINOM (STARDUST) ---
+        // --- BACKGROUND STARDUST ENGINE ---
         const canvas = document.getElementById('stardust');
         const ctx = canvas.getContext('2d');
         let particles = [];
-        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
@@ -823,28 +610,38 @@
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speedY = Math.random() * -0.4 - 0.1;
-                this.speedX = (Math.random() - 0.5) * 0.2;
-                this.opacity = Math.random() * 0.5 + 0.1; 
+                this.size = Math.random() * 1.2 + 0.4;
+                this.speedY = Math.random() * -0.3 - 0.05;
+                this.speedX = (Math.random() - 0.5) * 0.15;
+                this.opacity = Math.random() * 0.4 + 0.1; 
             }
             update() {
-                this.y += this.speedY; this.x += this.speedX;
-                if (this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
+                this.y += this.speedY;
+                this.x += this.speedX;
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
             }
-            draw() { ctx.fillStyle = `rgba(198, 138, 71, ${this.opacity})`; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+            draw() {
+                ctx.fillStyle = `rgba(198, 138, 71, ${this.opacity})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
         }
-        for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+        for (let i = 0; i < 50; i++) particles.push(new Particle());
+
         function animateStardust() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); }
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
             requestAnimationFrame(animateStardust);
         }
         animateStardust();
-
-        // --- INICIJALIZACIJA ---
-        initCarousel();
-        loadTrack(currentTrackIndex);
     </script>
 </body>
 </html>
