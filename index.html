@@ -85,7 +85,7 @@
         }
 
         /* =========================================
-           EDGE-TO-EDGE CAROUSEL (Geometric Lock)
+           EDGE-TO-EDGE CAROUSEL (Absolute Center Fix)
            ========================================= */
         .carousel-viewport {
             flex: none;
@@ -99,11 +99,14 @@
         .carousel-track {
             display: flex;
             align-items: center;
+            justify-content: flex-start; /* Kontrolisano preko JS translacije */
             transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
             will-change: transform;
+            width: max-content; /* Osigurava da se širina ne lomi */
         }
 
         .carousel-slide {
+            width: 280px; 
             flex: 0 0 280px; 
             display: flex;
             justify-content: center;
@@ -117,7 +120,7 @@
         }
 
         @media (min-width: 768px) {
-            .carousel-slide { flex: 0 0 360px; }
+            .carousel-slide { width: 360px; flex: 0 0 360px; }
         }
 
         .carousel-slide.active {
@@ -359,7 +362,6 @@
         .btn-secondary { width: 2.5rem; height: 2.5rem; }
         .btn-secondary:hover { color: var(--scanory-text-main); }
         
-        /* State colors */
         .btn-secondary.active { color: var(--scanory-primary) !important; }
 
         .btn-play {
@@ -517,8 +519,8 @@
         // --- STATE SETTINGS ---
         let currentTrackIndex = 0;
         let isPlaying = false;
-        let isCollectionLoopActive = true; // Default: UKLJUČENO (Zlatno)
-        let isShuffleActive = false;        // Default: ISKLJUČENO
+        let isCollectionLoopActive = true; 
+        let isShuffleActive = false;        
         
         let audioCtx, analyser, source, dataArray;
         let isAudioInitialized = false;
@@ -604,13 +606,16 @@
         }
 
         function updateCarouselView() {
-            const slide = document.getElementById(`slide-${currentTrackIndex}`);
-            if (!slide) return;
-            const slideWidth = slide.offsetWidth;
+            // FIX: Hardkodovana tačna širina slajda iz CSS-a (280px mobilni, 360px desktop) za savršenu kalkulaciju centra
+            const isDesktop = window.innerWidth >= 768;
+            const slideWidth = isDesktop ? 360 : 280;
+            
             const viewportWidth = window.innerWidth;
             const centerOffset = (viewportWidth / 2) - (slideWidth / 2);
             const translatePx = -(currentTrackIndex * slideWidth) + centerOffset;
+            
             carouselTrack.style.transform = `translateX(${translatePx}px)`;
+
             document.querySelectorAll('.carousel-slide').forEach((s, idx) => {
                 s.classList.toggle('active', idx === currentTrackIndex);
                 if(idx !== currentTrackIndex) {
@@ -675,19 +680,16 @@
 
         function playNext() {
             if (isShuffleActive) {
-                // Biranje nasumične stavke iz kolekcije
                 let randomIndex;
                 do {
                     randomIndex = Math.floor(Math.random() * playlist.length);
                 } while (randomIndex === currentTrackIndex && playlist.length > 1);
                 currentTrackIndex = randomIndex;
             } else {
-                // Regularni mod kretanja unaprijed
                 if (currentTrackIndex === playlist.length - 1) {
                     if (isCollectionLoopActive) {
-                        currentTrackIndex = 0; // Vrati se na početak ako je Loop aktivan
+                        currentTrackIndex = 0; 
                     } else {
-                        // Ako loop kolekcije nije aktivan, stani na kraju i zaustavi player
                         audio.pause();
                         updatePlayState(false);
                         return;
@@ -731,9 +733,8 @@
         carouselTrack.addEventListener('touchmove', (e) => {
             if (!isDragging) return;
             const diff = e.touches[0].clientX - startPos;
-            const slide = document.getElementById(`slide-${currentTrackIndex}`);
-            if(!slide) return;
-            const slideWidth = slide.offsetWidth;
+            const isDesktop = window.innerWidth >= 768;
+            const slideWidth = isDesktop ? 360 : 280;
             const centerOffset = (window.innerWidth / 2) - (slideWidth / 2);
             const baseTranslatePx = -(currentTrackIndex * slideWidth) + centerOffset;
             carouselTrack.style.transform = `translateX(${baseTranslatePx + diff}px)`;
@@ -760,13 +761,11 @@
         nextBtn.addEventListener('click', playNext);
         prevBtn.addEventListener('click', playPrev);
         
-        // 1st Button Click Logic: Toggle Endless Loop State
         loopCollectionBtn.addEventListener('click', () => {
             isCollectionLoopActive = !isCollectionLoopActive;
             loopCollectionBtn.classList.toggle('active', isCollectionLoopActive);
         });
 
-        // 5th Button Click Logic: Toggle Shuffle Mode State
         shuffleBtn.addEventListener('click', () => {
             isShuffleActive = !isShuffleActive;
             shuffleBtn.classList.toggle('active', isShuffleActive);
@@ -784,7 +783,6 @@
             }
         });
 
-        // Kada se završi audio fajl, okida se prelazak na sledeću numeru u lancu
         audio.addEventListener('ended', () => {
             playNext();
         });
