@@ -358,7 +358,9 @@
         button:focus { outline: none; }
         .btn-secondary { width: 2.5rem; height: 2.5rem; }
         .btn-secondary:hover { color: var(--scanory-text-main); }
-        .btn-secondary.active { color: var(--scanory-primary); }
+        
+        /* State colors */
+        .btn-secondary.active { color: var(--scanory-primary) !important; }
 
         .btn-play {
             width: 4.5rem; height: 4.5rem; border-radius: 50%;
@@ -434,7 +436,7 @@
             </div>
 
             <div class="controls-container">
-                <button id="loopIndicatorBtn" class="btn-secondary active" style="color: var(--scanory-primary);">
+                <button id="loopCollectionBtn" class="btn-secondary active">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
                         <path d="M17 2l4 4-4 4"/>
                         <path d="M3 11v-1a4 4 0 0 1 4-4h14"/>
@@ -467,9 +469,13 @@
                     </svg>
                 </button>
 
-                <button class="btn-secondary" style="opacity: 0.2; pointer-events: none;">
+                <button id="shuffleBtn" class="btn-secondary">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width: 20px; height: 20px;">
-                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="16 3 21 3 21 8"/>
+                        <line x1="4" y1="20" x2="21" y2="3"/>
+                        <polyline points="21 16 21 21 16 21"/>
+                        <line x1="15" y1="15" x2="21" y2="21"/>
+                        <line x1="4" y1="4" x2="9" y2="9"/>
                     </svg>
                 </button>
             </div>
@@ -479,8 +485,7 @@
     </main>
 
     <script>
-        // --- SCANORY LULLABABIES - ONE IMMUTABLE DECK ---
-        // Every single slide is bound exclusively to MoonCradle.mp3
+        // --- SCANORY LULLABABIES - DECK ---
         const playlist = [
             { id: 0, title: "Moon Cradle — Vol. I", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
             { id: 1, title: "Moon Cradle — Vol. II", artist: "Lullababies Premium", src: "./MoonCradle.mp3", cover: "BabyImage.jpeg" },
@@ -494,7 +499,8 @@
         const playBtn = document.getElementById('playBtn');
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
-        const loopIndicatorBtn = document.getElementById('loopIndicatorBtn');
+        const loopCollectionBtn = document.getElementById('loopCollectionBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
         
         const playIcon = document.getElementById('playIcon');
         const pauseIcon = document.getElementById('pauseIcon');
@@ -508,35 +514,32 @@
         const pagination = document.getElementById('pagination');
         const vaultBody = document.getElementById('vaultBody');
 
-        // --- STATE ---
+        // --- STATE SETTINGS ---
         let currentTrackIndex = 0;
         let isPlaying = false;
+        let isCollectionLoopActive = true; // Default: UKLJUČENO (Zlatno)
+        let isShuffleActive = false;        // Default: ISKLJUČENO
         
         let audioCtx, analyser, source, dataArray;
         let isAudioInitialized = false;
         let isVisualizerBroken = false;
 
-        // --- WEB AUDIO API (Rhythm Analyzer) ---
+        // --- WEB AUDIO API ---
         function initAudioVisualizer() {
             if (isAudioInitialized || isVisualizerBroken) return;
-            
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 audioCtx = new AudioContext();
                 analyser = audioCtx.createAnalyser();
-                
                 source = audioCtx.createMediaElementSource(audio);
                 source.connect(analyser);
                 analyser.connect(audioCtx.destination);
-                
                 analyser.fftSize = 256;
                 const bufferLength = analyser.frequencyBinCount;
                 dataArray = new Uint8Array(bufferLength);
-                
                 isAudioInitialized = true;
                 drawRhythm();
             } catch (error) {
-                console.warn("SCANORY Safe Mode: Visualizer bypass engine armed.");
                 isVisualizerBroken = true;
                 activateFallbackPulse();
             }
@@ -545,19 +548,14 @@
         function drawRhythm() {
             if (!isAudioInitialized || isVisualizerBroken) return;
             requestAnimationFrame(drawRhythm);
-            
             if (!isPlaying) return;
-
             analyser.getByteFrequencyData(dataArray);
-            
             let sum = 0;
             for (let i = 0; i < 15; i++) sum += dataArray[i];
             let avg = sum / 15;
-            
             let scale = 1.0 + (avg / 255) * 0.12; 
             let opacity = (avg / 255) * 0.6;
             let blur = 8 + (avg / 255) * 14;
-
             const activeRing = document.querySelector('.carousel-slide.active .rhythm-ring');
             if (activeRing) {
                 activeRing.classList.remove('safe-pulse'); 
@@ -579,16 +577,14 @@
             }
         }
 
-        // --- CAROUSEL MATHEMATICS ---
+        // --- CAROUSEL ---
         function initCarousel() {
             carouselTrack.innerHTML = '';
             pagination.innerHTML = '';
-            
             playlist.forEach((track, index) => {
                 const slide = document.createElement('div');
                 slide.className = 'carousel-slide';
                 slide.id = `slide-${index}`;
-                
                 slide.innerHTML = `
                     <div class="cover-wrapper-node">
                         <div class="cover-container">
@@ -600,7 +596,6 @@
                     </div>
                 `;
                 carouselTrack.appendChild(slide);
-
                 const dot = document.createElement('div');
                 dot.className = 'dot';
                 dot.id = `dot-${index}`;
@@ -611,14 +606,11 @@
         function updateCarouselView() {
             const slide = document.getElementById(`slide-${currentTrackIndex}`);
             if (!slide) return;
-            
             const slideWidth = slide.offsetWidth;
             const viewportWidth = window.innerWidth;
             const centerOffset = (viewportWidth / 2) - (slideWidth / 2);
             const translatePx = -(currentTrackIndex * slideWidth) + centerOffset;
-            
             carouselTrack.style.transform = `translateX(${translatePx}px)`;
-
             document.querySelectorAll('.carousel-slide').forEach((s, idx) => {
                 s.classList.toggle('active', idx === currentTrackIndex);
                 if(idx !== currentTrackIndex) {
@@ -634,7 +626,7 @@
             });
         }
 
-        // --- PLAYER MECHANICS ---
+        // --- PLAYER CONTROLS ---
         function formatTime(seconds) {
             if (isNaN(seconds)) return "0:00";
             const min = Math.floor(seconds / 60);
@@ -654,7 +646,6 @@
         function reloadAndExecuteTrack() {
             if (!isAudioInitialized && !isVisualizerBroken) initAudioVisualizer();
             audio.currentTime = 0; 
-            
             audio.play().then(() => {
                 updatePlayState(true);
             }).catch(() => {
@@ -665,9 +656,7 @@
         function togglePlayPause() {
             playBtn.classList.remove('needs-interaction');
             if (!isAudioInitialized && !isVisualizerBroken) initAudioVisualizer();
-            
             if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-            
             isPlaying ? audio.pause() : audio.play();
         }
 
@@ -685,19 +674,51 @@
         }
 
         function playNext() {
-            // Absolute Loop Chain: When page reaches index 4, it instantly snaps back to 0
-            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+            if (isShuffleActive) {
+                // Biranje nasumične stavke iz kolekcije
+                let randomIndex;
+                do {
+                    randomIndex = Math.floor(Math.random() * playlist.length);
+                } while (randomIndex === currentTrackIndex && playlist.length > 1);
+                currentTrackIndex = randomIndex;
+            } else {
+                // Regularni mod kretanja unaprijed
+                if (currentTrackIndex === playlist.length - 1) {
+                    if (isCollectionLoopActive) {
+                        currentTrackIndex = 0; // Vrati se na početak ako je Loop aktivan
+                    } else {
+                        // Ako loop kolekcije nije aktivan, stani na kraju i zaustavi player
+                        audio.pause();
+                        updatePlayState(false);
+                        return;
+                    }
+                } else {
+                    currentTrackIndex++;
+                }
+            }
             loadTrack(currentTrackIndex);
             reloadAndExecuteTrack();
         }
 
         function playPrev() {
-            currentTrackIndex = (currentTrackIndex - 1 + playlist.length) % playlist.length;
+            if (isShuffleActive) {
+                let randomIndex;
+                do {
+                    randomIndex = Math.floor(Math.random() * playlist.length);
+                } while (randomIndex === currentTrackIndex && playlist.length > 1);
+                currentTrackIndex = randomIndex;
+            } else {
+                if (currentTrackIndex === 0) {
+                    currentTrackIndex = playlist.length - 1;
+                } else {
+                    currentTrackIndex--;
+                }
+            }
             loadTrack(currentTrackIndex);
             reloadAndExecuteTrack();
         }
 
-        // --- NATIVE SWIPE LOGIC ---
+        // --- SWIPE LOGIC ---
         let isDragging = false;
         let startPos = 0;
 
@@ -712,11 +733,9 @@
             const diff = e.touches[0].clientX - startPos;
             const slide = document.getElementById(`slide-${currentTrackIndex}`);
             if(!slide) return;
-            
             const slideWidth = slide.offsetWidth;
             const centerOffset = (window.innerWidth / 2) - (slideWidth / 2);
             const baseTranslatePx = -(currentTrackIndex * slideWidth) + centerOffset;
-            
             carouselTrack.style.transform = `translateX(${baseTranslatePx + diff}px)`;
         });
 
@@ -725,7 +744,6 @@
             carouselTrack.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
             const diff = e.changedTouches[0].clientX - startPos;
             const threshold = 50; 
-
             if (diff < -threshold) {
                 playNext(); 
             } else if (diff > threshold) {
@@ -737,15 +755,21 @@
 
         window.addEventListener('resize', updateCarouselView);
 
-        // --- EVENT LISTENERS ---
+        // --- INTERACTION EVENT LISTENERS ---
         playBtn.addEventListener('click', togglePlayPause);
         nextBtn.addEventListener('click', playNext);
         prevBtn.addEventListener('click', playPrev);
         
-        // Manual loop action reset trigger
-        loopIndicatorBtn.addEventListener('click', () => {
-            audio.currentTime = 0;
-            audio.play();
+        // 1st Button Click Logic: Toggle Endless Loop State
+        loopCollectionBtn.addEventListener('click', () => {
+            isCollectionLoopActive = !isCollectionLoopActive;
+            loopCollectionBtn.classList.toggle('active', isCollectionLoopActive);
+        });
+
+        // 5th Button Click Logic: Toggle Shuffle Mode State
+        shuffleBtn.addEventListener('click', () => {
+            isShuffleActive = !isShuffleActive;
+            shuffleBtn.classList.toggle('active', isShuffleActive);
         });
 
         audio.addEventListener('play', () => updatePlayState(true));
@@ -760,18 +784,9 @@
             }
         });
 
-        // HARDCODED HIGH PRECISION ENDLESS LOOP DECK
-        // Safely triggers the loop sequence or snaps chain back to Vol I on end boundary
+        // Kada se završi audio fajl, okida se prelazak na sledeću numeru u lancu
         audio.addEventListener('ended', () => {
-            if (currentTrackIndex === playlist.length - 1) {
-                // If Vol V finishes, snap back to Vol I and ignite track
-                currentTrackIndex = 0;
-                loadTrack(currentTrackIndex);
-                reloadAndExecuteTrack();
-            } else {
-                // Standard progress loop chain execution
-                playNext();
-            }
+            playNext();
         });
 
         audio.addEventListener('loadedmetadata', () => { durationTimeEl.textContent = formatTime(audio.duration); });
